@@ -1,9 +1,12 @@
 # Importing Dependencies
 from flask import Flask,render_template,request
+from prometheus_flask_exporter import PrometheusMetrics
 import numpy as np
 import joblib
 import pandas as pd
-
+from prometheus_flask_instrumentator import Instrumentator
+# from flask_prometheus import monitor
+from prometheus_client import Counter, generate_latest
 
 app = Flask(__name__)
 
@@ -50,5 +53,18 @@ def not_found(error):
     return "404: Page not found",404
 
 
+# @app.route('/metrics')
+# def metrics():
+#     return generate_latest()
+
+# Initialize Prometheus Metrics
+metrics = PrometheusMetrics(app)
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8005)
+    # monitoring
+# monitor(app, port=8005)
+    app.run(host='0.0.0.0',port=8005)
+
+
+
+# Instrumentator().instrument(app).expose(app)
